@@ -1,0 +1,46 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+  "project": true,
+    "tsconfigRootDir": ".",
+    "sourceType": "module"
+},
+  "plugins": ["@typescript-eslint", "sonarjs", "jest", "prettier"],
+  "extends": [
+  "eslint:recommended",
+  "airbnb-base",
+  "airbnb-typescript/base",
+  "plugin:jest/recommended",
+  "plugin:sonarjs/recommended",
+  "plugin:@typescript-eslint/strict-type-checked",
+  "plugin:@typescript-eslint/stylistic-type-checked",
+  "plugin:prettier/recommended"
+],
+  "ignorePatterns": ["**/node_modules/**", "dist/**", "src/entity/**"],
+  "rules": {
+  "prettier/prettier": "error",
+    "class-methods-use-this": "off",
+    "func-names": "off",
+    "max-len": [
+    "error",
+    { "code": 80, "ignoreTemplateLiterals": true, "ignoreUrls": true }
+  ],
+    "newline-per-chained-call": "off",
+    "no-await-in-loop": "off",
+    "no-continue": "off",
+    "no-param-reassign": ["error", { "props": false }],
+    "no-restricted-syntax": [
+    "error",
+    "ForInStatement",
+    "LabeledStatement",
+    "WithStatement"
+  ],
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+    "no-void": ["error", { "allowAsStatement": true }],
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/no-extraneous-class": "off",
+    "@typescript-eslint/dot-notation": "off",
+    "@typescript-eslint/ban-types": "off"
+}
+}

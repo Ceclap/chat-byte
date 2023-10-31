@@ -1,0 +1,15 @@
+version: '3'
+services:
+  my_postgres:
+    image: postgres:latest
+    container_name: auth
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: top_secret
+      POSTGRES_DB: auth
+    volumes:
+        - dbdata:/var/lib/postgresql/data/
+volumes:
+    dbdata: null
