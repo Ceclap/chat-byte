@@ -39,19 +39,19 @@ export class AuthService {
       username
     })
 
-    const token = this.jwtService.sign({ id: user.id }, {
+    const access_token = this.jwtService.sign({ id: user.id }, {
       secret: process.env['JWT_SECRET'],
       expiresIn: process.env['JWT_EXPIRES_IN'],
     })
 
-    await this.mailService.sendUserConfirmation(email, 'Confirm your email', 'Confirm your email by this link: http://localhost:3000/auth/confirm/' + token)
+    await this.mailService.sendUserConfirmation(email, 'Confirm your email', 'Confirm your email by this link: http://localhost:3000/auth/confirm/' + access_token)
     return {
-      token: token
+      access_token: access_token
     }
   }
 
-  async confirm(token: string) {
-    const { id } = await this.jwtService.verifyAsync(token, {
+  async confirm(access_token: string) {
+    const { id } = await this.jwtService.verifyAsync(access_token, {
       secret: process.env['JWT_SECRET']
     })
     const user = await this.authRepository.findOneOrFail({where: {id: id}})
@@ -84,14 +84,18 @@ export class AuthService {
       throw new HttpException('Wrong password', 400);
     }
 
-    const token = this.jwtService.sign({ id: user.id }, {
+    const access_token = this.jwtService.sign({ id: user.id }, {
       secret: process.env['JWT_SECRET'],
       expiresIn: process.env['JWT_EXPIRES_IN'],
     })
+    const refresh_token = this.jwtService.sign({id : user.id}, {
+      secret: process.env['JWT_REFRESH_SECRET'],
+      expiresIn: process.env['JWT_REFRESH_EXPIRES_IN']
+    })
 
-    console.log(token)
     return {
-      token: token
+      access_token: access_token,
+      refresh_token: refresh_token
     }
   }
 }
