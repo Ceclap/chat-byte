@@ -88,10 +88,14 @@ export class AuthService {
       secret: process.env['JWT_SECRET'],
       expiresIn: process.env['JWT_EXPIRES_IN'],
     })
+    const refreshToken = this.jwtService.sign({id : user.id}, {
+      secret: process.env['JWT_REFRESH_SECRET'],
+      expiresIn: process.env['JWT_REFRESH_EXPIRES_IN']
+    })
 
-    console.log(token)
     return {
-      token: token
+      token: token,
+      refreshToken: refreshToken
     }
   }
 }

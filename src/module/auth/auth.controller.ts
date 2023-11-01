@@ -25,4 +25,6 @@ export class AuthController {
   async profile(@Param() { token }: JwtDto) {
     return await this.authService.confirm(token)
   }
+
+
 }
