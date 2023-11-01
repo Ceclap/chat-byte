@@ -21,9 +21,9 @@ export class AuthController {
     return await this.authService.login(data)
   }
 
-  @Get('confirm/:token')
-  async profile(@Param() { token }: JwtDto) {
-    return await this.authService.confirm(token)
+  @Get('confirm/:access_token')
+  async profile(@Param() { access_token }: JwtDto) {
+    return await this.authService.confirm(access_token)
   }
 
 
