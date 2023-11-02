@@ -54,25 +54,27 @@ export class AuthService {
     const { id } = await this.jwtService.verifyAsync(access_token, {
       secret: process.env['JWT_SECRET']
     })
-    const user = await this.authRepository.findOneOrFail({where: {id: id}})
-    if(!user){
+    const user = await this.authRepository.findOneOrFail({ where: { id: id } })
+    if (!user) {
       throw new HttpException('Not Found User', 404)
     }
-    await this.authRepository.update(user.id, {confirmed: true})
+    await this.authRepository.update(user.id, { confirmed: true })
     return {
       userId: user.id
     }
   }
-  async login(data: LoginDto ){
-    const { email,username ,  password } = data;
-    const critery = email? { email } : { username }
 
-    if(!critery){
+  async login(data: LoginDto) {
+    const { email, username, password } = data;
+    const critery = email ? { email } : { username }
+
+    if (!critery) {
       throw new HttpException('User not found', 404)
     }
 
     const user = await this.authRepository.findOneOrFail({
-      where: critery },
+        where: critery
+      },
     )
 
     const passCompareRes = await bcrypt.compare(
@@ -88,7 +90,7 @@ export class AuthService {
       secret: process.env['JWT_SECRET'],
       expiresIn: process.env['JWT_EXPIRES_IN'],
     })
-    const refresh_token = this.jwtService.sign({id : user.id}, {
+    const refresh_token = this.jwtService.sign({ id: user.id }, {
       secret: process.env['JWT_REFRESH_SECRET'],
       expiresIn: process.env['JWT_REFRESH_EXPIRES_IN']
     })
@@ -96,6 +98,30 @@ export class AuthService {
     return {
       access_token: access_token,
       refresh_token: refresh_token
+    }
+  }
+
+  async refresh(id: string) {
+    const user = await this.authRepository.findOne({ where: { id: id } })
+    if (!user) {
+      throw new HttpException('Not Found User', 404)
+    }
+    const access_token = this.jwtService.sign({ id: user.id }, {
+      secret: process.env['JWT_SECRET'],
+      expiresIn: process.env['JWT_EXPIRES_IN'],
+    })
+    return {
+      access_token: access_token
+    }
+  }
+
+  async username(username: string) {
+    const user = await this.authRepository.findOne({ where: { username: username } })
+    if (user) {
+      throw new HttpException('User Exist', 409)
+    }
+    return {
+      message: 'Username is free'
     }
   }
 }
