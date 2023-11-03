@@ -92,8 +92,16 @@ export class AuthController {
   }
 
   @ApiResponse({
+    schema: {
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Username is free'
+        },
+      },
+    },
     status: 200,
-    description: 'Username is free',
+    description: 'Ok',
   })
   @ApiResponse({
     status: 409,
