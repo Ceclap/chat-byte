@@ -118,10 +118,12 @@ export class AuthService {
   async username(username: string) {
     const user = await this.authRepository.findOne({ where: { username: username } })
     if (user) {
-      throw new HttpException('User Exist', 409)
+      return {
+        message: false
+      }
     }
     return {
-      message: 'Username is free'
+      message: true
     }
   }
 }
