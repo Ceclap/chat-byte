@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "@common/Dto/register.dto";
-import { ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtDto } from "@common/Dto/jwt.dto";
 import { LoginDto } from "@common/Dto/login.dto";
 import { RefreshGuard } from "@common/Guards/refresh.guard";
 import { Client } from "@common/decorators/client.decorator";
+import { VerifyDto } from "@common/Dto/verify.dto";
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -95,22 +96,17 @@ export class AuthController {
     schema: {
       properties: {
         message: {
-          type: 'string',
-          example: 'Username is free'
+          type: 'boolean',
+          example: true
         },
       },
     },
     status: 200,
     description: 'Ok',
   })
-  @ApiResponse({
-    status: 409,
-    description: 'User Exist',
-  })
-  @ApiParam({ name: 'username', type: String, description: 'Verify if username name is free' })
-  @Get('username/:username')
-  async username(@Param() { username }: {username: string }) {
-    return await this.authService.username(username)
+  @Get('verify')
+  async verify(@Query() critery: VerifyDto) {
+    return await this.authService.verify(critery)
   }
 
 }

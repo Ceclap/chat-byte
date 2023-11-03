@@ -8,6 +8,7 @@ import { JwtService } from "@nestjs/jwt";
 import process from "process";
 import { LoginDto } from "@common/Dto/login.dto";
 import * as bcrypt from "bcrypt";
+import { VerifyDto } from "@common/Dto/verify.dto";
 
 
 @Injectable()
@@ -115,8 +116,8 @@ export class AuthService {
     }
   }
 
-  async username(username: string) {
-    const user = await this.authRepository.findOne({ where: { username: username } })
+  async verify(critery: VerifyDto) {
+    const user = await this.authRepository.findOne({ where: critery })
     if (user) {
       return {
         message: false
