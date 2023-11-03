@@ -46,7 +46,7 @@ export class AuthService {
 
     await this.mailService.sendUserConfirmation(email, 'Confirm your email', 'Confirm your email by this link: http://localhost:3000/auth/confirm/' + access_token)
     return {
-      access_token: access_token
+      message: 'success'
     }
   }
 
