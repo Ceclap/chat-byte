@@ -1,13 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
+import { Response } from "express";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "@common/Dto/register.dto";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiCookieAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtDto } from "@common/Dto/jwt.dto";
 import { LoginDto } from "@common/Dto/login.dto";
 import { RefreshGuard } from "@common/Guards/refresh.guard";
 import { Client } from "@common/decorators/client.decorator";
 import { VerifyDto } from "@common/Dto/verify.dto";
-
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -51,8 +51,11 @@ export class AuthController {
     description: 'Ok',
   })
   @Post('login')
-  async login(@Body() data: LoginDto) {
-    return await this.authService.login(data)
+  async login(@Body() data: LoginDto, @Res() response: Response) {
+    const token = await this.authService.login(data)
+    response.cookie('access_token', token.access_token, { httpOnly: true })
+    response.cookie('refresh_token', token.refresh_token, { httpOnly: true })
+    response.send({message: 'success' })
   }
 
   @ApiResponse({
@@ -72,26 +75,6 @@ export class AuthController {
     return await this.authService.confirm(access_token)
   }
 
-
-  @ApiResponse({
-    schema: {
-      properties: {
-        access_token: {
-          type: 'string',
-          example:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiNzQzZTE3LTBkNjgtNDYyYS1hZDE0LTdjN2YyZGI3YmE4MyIsImVtYWlsIjoibmliZWgzODkxNUBnYW1lc3pveC5jb20iLCJpYXQiOjE2OTM5MTYxNDAsImV4cCI6MTY5MzkxNjY4MH0.tOmwZsmNc7ffAO6mXOpoIWAz7WhOUAMMd7Gog2FdqiU',
-        },
-      },
-    },
-    status: 200,
-    description: 'Ok',
-  })
-  @UseGuards(RefreshGuard)
-  @Get('refresh')
-  async refresh(@Client() {id}: { id: string }) {
-    return await this.authService.refresh(id)
-  }
-
   @ApiResponse({
     schema: {
       properties: {
@@ -108,5 +91,15 @@ export class AuthController {
   async verify(@Query() critery: VerifyDto) {
     return await this.authService.verify(critery)
   }
+
+  @ApiCookieAuth()
+  @UseGuards(RefreshGuard)
+  @Get('salut')
+    async salut(@Client() {id}: { id: string }) {
+     return {
+       id: id
+     }
+  }
+
 
 }

@@ -1,11 +1,11 @@
 import {
   CanActivate,
   ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as process from 'process';
+  Injectable, UnauthorizedException
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import process from "process";
+import { Request } from "express";
 
 @Injectable()
 export class RefreshGuard implements CanActivate {
@@ -13,25 +13,41 @@ export class RefreshGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
-    if (!token) {
+    const response = context.switchToHttp().getResponse();
+    const access_token = request.cookies.access_token
+    if (!access_token ) {
       throw new UnauthorizedException();
     }
-    try {
-      request.user = await this.jwtService.verifyAsync(token, {
-        secret: process.env['JWT_REFRESH_SECRET'],
+      request.user = await this.jwtService.verifyAsync(access_token , {
+        secret: process.env['JWT_SECRET'],
+      }).catch(async ()=> {
+        const {access_token, payload} = await this.refresh(request)
+        response.clearCookie('access_token')
+        response.cookie('access_token', access_token, { httpOnly: true })
+        return payload
       });
-      delete request.user.iat;
-      delete request.user.exp;
-    } catch {
-      throw new UnauthorizedException();
-    }
     return request.user;
   }
 
-  private extractTokenFromHeader(request:any): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+  async refresh(request:Request){
+    const refresh_token = request.cookies.refresh_token
+    if (!refresh_token ) {
+      throw new UnauthorizedException();
+    }
+      const payload = await this.jwtService.verifyAsync(refresh_token , {
+        secret: process.env['JWT_REFRESH_SECRET'],
+      }).catch(()=>{
+        throw new UnauthorizedException();
+      });
+      delete payload.iat;
+      delete payload.exp;
+      const access_token = await this.jwtService.signAsync(payload, {
+        secret: process.env['JWT_REFRESH_SECRET'],
+        expiresIn: process.env['JWT_EXPIRES_IN'],
+      })
+    return {
+        access_token: access_token,
+        payload: payload,
+    }
   }
-
 }

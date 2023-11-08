@@ -95,7 +95,6 @@ export class AuthService {
       secret: process.env['JWT_REFRESH_SECRET'],
       expiresIn: process.env['JWT_REFRESH_EXPIRES_IN']
     })
-
     return {
       access_token: access_token,
       refresh_token: refresh_token
@@ -127,4 +126,5 @@ export class AuthService {
       message: true
     }
   }
+
 }
