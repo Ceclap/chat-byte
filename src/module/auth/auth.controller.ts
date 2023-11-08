@@ -35,15 +35,9 @@ export class AuthController {
   @ApiResponse({
     schema: {
       properties: {
-        access_token: {
+        message: {
           type: 'string',
-          example:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiNzQzZTE3LTBkNjgtNDYyYS1hZDE0LTdjN2YyZGI3YmE4MyIsImVtYWlsIjoibmliZWgzODkxNUBnYW1lc3pveC5jb20iLCJpYXQiOjE2OTM5MTYxNDAsImV4cCI6MTY5MzkxNjY4MH0.tOmwZsmNc7ffAO6mXOpoIWAz7WhOUAMMd7Gog2FdqiU',
-        },
-        refresh_token: {
-          type: 'string',
-          example:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiNzQzZTE3LTBkNjgtNDYyYS1hZDE0LTdjN2YyZGI3YmE4MyIsImVtYWlsIjoibmliZWgzODkxNUBnYW1lc3pveC5jb20iLCJpYXQiOjE2OTM5MTYxNDAsImV4cCI6MTY5MzkxNjY4MH0.tOmwZsmNc7ffAO6mXOpoIWAz7WhOUAMMd7Gog2FdqiU',
+          example: 'success'
         },
       },
     },
