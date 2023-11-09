@@ -15,6 +15,9 @@ export class Auth{
   @Column()
   password!: string;
 
+  @Column({ default: null })
+  photo!: string;
+
   @Column({ default: false })
   confirmed!: boolean;
 

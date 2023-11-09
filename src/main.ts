@@ -11,8 +11,8 @@ async function bootstrap() {
   app.enableCors();
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('Delivery App')
-    .setDescription('The Delivery App Test Project')
+    .setTitle('Chat App')
+    .setDescription('The Chat App Test Project')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

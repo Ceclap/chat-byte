@@ -9,6 +9,21 @@ services:
       POSTGRES_USER: ${TYPEORM_USERNAME}
       POSTGRES_PASSWORD: ${TYPEORM_PASSWORD}
       POSTGRES_DB: ${TYPEORM_DATABASE}
+  minio:
+    image: bitnami/minio
+    container_name: chat
+    restart: unless-stopped
     volumes:
-        - ./postgres-data:/var/lib/postgresql/data
+      - minio:/data
+    environment:
+      - MINIO_ACCESS_KEY=minio
+      - MINIO_SECRET_KEY=miniosecret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
 
+volumes:
+    minio:
+      driver: local
+    pgdata:
+      driver: local
