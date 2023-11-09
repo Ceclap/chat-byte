@@ -1,5 +1,6 @@
 import { DataSource, DataSourceOptions } from "typeorm";
-import process from "process";
+import {config} from 'dotenv';
+config()
 
 export const datasourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -8,11 +9,11 @@ export const datasourceOptions: DataSourceOptions = {
   username: process.env['TYPEORM_USERNAME'],
   password: "top_secret",
   database: process.env['TYPEORM_DATABASE'],
-  synchronize: false,
+  synchronize: true,
   logging: true,
-  entities: [`${__dirname}/common/Entity/*.entity{.ts,.js}`],
+  entities: [`${__dirname}/entity/*.entity{.ts,.js}`],
   migrationsTableName: 'migrations',
-  migrations: [`${__dirname}/common/migrations/*{.ts,.js}`],
+  migrations: [`${__dirname}/migrations/*{.ts,.js}`],
 }
 
 export default new DataSource(datasourceOptions);

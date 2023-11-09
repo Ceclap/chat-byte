@@ -1,14 +1,14 @@
 import { HttpException, Injectable } from "@nestjs/common";
-import { RegisterDto } from "@common/Dto/register.dto";
+import { RegisterDto } from "@common/dto/register.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Auth } from "@common/Entity/auth.entity";
+import { Auth } from "@core/database/entity/auth.entity";
 import { MailService } from "../mail/mail.service";
 import { JwtService } from "@nestjs/jwt";
 import process from "process";
-import { LoginDto } from "@common/Dto/login.dto";
+import { LoginDto } from "@common/dto/login.dto";
 import * as bcrypt from "bcrypt";
-import { VerifyDto } from "@common/Dto/verify.dto";
+import { VerifyDto } from "@common/dto/verify.dto";
 
 
 @Injectable()
@@ -96,6 +96,11 @@ export class AuthService {
       expiresIn: process.env['JWT_REFRESH_EXPIRES_IN']
     })
     return {
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
       access_token: access_token,
       refresh_token: refresh_token
     }
