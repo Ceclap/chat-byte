@@ -41,7 +41,9 @@ export class ImageController {
   @Post(':id')
   async import(@UploadedFile() file: Express.Multer.File,@Param() id: {id: string}) {
     await this.imageService.import(file, id);
-    return "Hello World";
+    return {
+      message: 'success',
+    };
   }
 
 }

@@ -27,7 +27,6 @@ export class ImageService {
     } else {
       console.log(`Bucket '${this.bucketName}' already exists.`);
     }
-
   }
 
     async import(file: Express.Multer.File, id: {id: string }) {
