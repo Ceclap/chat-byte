@@ -86,6 +86,9 @@ export class AuthService {
     if (!passCompareRes) {
       throw new HttpException('Wrong password', 400);
     }
+    if (!user.confirmed) {
+      throw new HttpException('User not confirmed', 400);
+    }
 
     const access_token = this.jwtService.sign({ id: user.id }, {
       secret: process.env['JWT_SECRET'],
@@ -95,30 +98,19 @@ export class AuthService {
       secret: process.env['JWT_REFRESH_SECRET'],
       expiresIn: process.env['JWT_REFRESH_EXPIRES_IN']
     })
+
     return {
       user: {
         id: user.id,
         email: user.email,
         username: user.username,
+        photo: `localhost:9000/${process.env['BUCKET_NAME']}/${user.photo}`,
       },
       access_token: access_token,
       refresh_token: refresh_token
     }
   }
 
-  async refresh(id: string) {
-    const user = await this.authRepository.findOne({ where: { id: id } })
-    if (!user) {
-      throw new HttpException('Not Found User', 404)
-    }
-    const access_token = this.jwtService.sign({ id: user.id }, {
-      secret: process.env['JWT_SECRET'],
-      expiresIn: process.env['JWT_EXPIRES_IN'],
-    })
-    return {
-      access_token: access_token
-    }
-  }
 
   async verify(critery: VerifyDto) {
     const user = await this.authRepository.findOne({ where: critery })
@@ -130,6 +122,20 @@ export class AuthService {
     return {
       message: true
     }
+  }
+
+  async me(id: {id: string}){
+    const user = await this.authRepository.findOne({where:id})
+    if(!user)
+    {
+      throw new HttpException('User Not Found', 404)
+    }
+    return {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        photo: user.photo,
+      }
   }
 
 }
