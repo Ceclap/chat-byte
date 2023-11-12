@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from "@nest
 import { Response } from "express";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "@common/dto/register.dto";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiCookieAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtDto } from "@common/dto/jwt.dto";
 import { LoginDto } from "@common/dto/login.dto";
 import { VerifyDto } from "@common/dto/verify.dto";
@@ -103,6 +103,7 @@ export class AuthController {
       },
     },
   })
+  @ApiCookieAuth()
   @UseGuards(AuthGuard)
   @Get('me')
   async me(@Client() id: { id:string }){

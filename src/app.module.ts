@@ -10,6 +10,7 @@ import process from "process";
 import { HealthModule } from "@core/health/health.module";
 import { CookieModule } from './module/cookie/cookie.module';
 import { ImageModule } from "./module/image/image.module";
+import { TaskModule } from "./module/task/task.module";
 
 @Module({
   imports: [
@@ -22,15 +23,15 @@ import { ImageModule } from "./module/image/image.module";
       password: process.env['TYPEORM_PASSWORD'],
       database: process.env['TYPEORM_DATABASE'],
       synchronize: true,
-      logging: true,
       entities: [`${__dirname}/core/database/entity/*.entity{.ts,.js}`],
       migrationsTableName: 'migrations',
       migrations: [`${__dirname}/core/database/migrations/*{.ts,.js}`],
     }),
-    AuthModule,
     HealthModule,
+    AuthModule,
     CookieModule,
     ImageModule,
+    TaskModule,
   ],
   providers: [
     {

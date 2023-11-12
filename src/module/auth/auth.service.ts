@@ -125,7 +125,11 @@ export class AuthService {
   }
 
   async me(id: {id: string}){
-    const user = await this.authRepository.findOne({where:id})
+    console.log(id);
+    const user = await this.authRepository.findOne({
+      relations: { tasks: true },
+      where:id
+    })
     if(!user)
     {
       throw new HttpException('User Not Found', 404)
@@ -135,6 +139,7 @@ export class AuthService {
         email: user.email,
         username: user.username,
         photo: user.photo,
+        tasks: user.tasks
       }
   }
 

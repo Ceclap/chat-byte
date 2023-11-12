@@ -10,7 +10,6 @@ export const datasourceOptions: DataSourceOptions = {
   password: "top_secret",
   database: process.env['TYPEORM_DATABASE'],
   synchronize: true,
-  logging: true,
   entities: [`${__dirname}/entity/*.entity{.ts,.js}`],
   migrationsTableName: 'migrations',
   migrations: [`${__dirname}/migrations/*{.ts,.js}`],
