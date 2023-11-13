@@ -67,7 +67,25 @@ export class ImageService {
         );
         await this.authRepository.update(user.id, { photo: fileName })
         return {
-          url: `localhost:9000/${process.env['BUCKET_NAME']}/${fileName}`,
+          url: fileName,
         };
       }
+      async getImage(id: {id: string }) {
+
+        const user = await this.authRepository.findOneOrFail({ where: id })
+        if(!user || !user.photo)
+        {
+          throw new HttpException(
+            'User or Photo not found',
+            HttpStatus.NOT_FOUND,
+          );
+        }
+        const name = user.photo;
+
+      const url = await this.minioClient.presignedGetObject(this.bucketName, name);
+      return {
+        url: url,
+      }
+  }
+
 }
